@@ -2,7 +2,7 @@
 
 My Personal Static Website Generator.
 
-![Screenshot](https://github.com/rasjonell/www/blog/main/www.png)
+![Screenshot](https://github.com/rasjonell/www/blob/main/www.png)
 
 Everything except `index.html` is generated using the `md-converterd.js` script.
 
