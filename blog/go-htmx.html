@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Building a Modern Website with Go, HTMX, and Templ - Gurgen.zip</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="description" content="Let's explore how to build a modern, dynamic website using Go, HTMX, and Templ." />
+    <meta name="keywords" content="web,go,htmx" />
+    <meta name="author" content="Gurgen Hayrapetyan" />
+    <link href="/styles.css" rel="stylesheet" />
+    <style>
+      pre[class*="language-"] {
+        background: #3c3836;
+        padding: 1em;
+        margin: .5em 0;
+        overflow: auto;
+        border-radius: 0.3em;
+      }
+      
+      code[class*="language-"] {
+        font-family: "Fira Code", monospace;
+        white-space: pre;
+        tab-size: 4;
+      }
+      
+      .dark pre[class*="language-"] {
+        background: #1d2021;
+      }
+
+      .prose {
+        color: inherit;
+      }
+      
+      .prose h1 {
+        font-size: 2.25rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: #b57614;
+        line-height: 1.2;
+      }
+      
+      .dark .prose h1 {
+        color: #fe8019;
+      }
+      
+      .prose h2 {
+        font-size: 1.875rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: #b57614;
+        line-height: 1.3;
+      }
+      
+      .dark .prose h2 {
+        color: #fe8019;
+      }
+      
+      .prose h3 {
+        font-size: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: #b57614;
+        line-height: 1.4;
+      }
+      
+      .dark .prose h3 {
+        color: #fe8019;
+      }
+      
+      .prose h4 {
+        font-size: 1.25rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: #b57614;
+        line-height: 1.4;
+      }
+      
+      .dark .prose h4 {
+        color: #fe8019;
+      }
+      
+      .prose p {
+        margin-top: 1.25em;
+        margin-bottom: 1.25em;
+        line-height: 1.6;
+      }
+      
+      .prose ul {
+        margin-top: 1.25em;
+        margin-bottom: 1.25em;
+        padding-left: 1.625em;
+        list-style-type: disc;
+      }
+      
+      .prose ol {
+        margin-top: 1.25em;
+        margin-bottom: 1.25em;
+        padding-left: 1.625em;
+        list-style-type: decimal;
+      }
+      
+      .prose li {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+      }
+      
+      .prose a {
+        color: #d65d0e;
+        text-decoration: underline;
+      }
+      
+      .dark .prose a {
+        color: #fe8019;
+      }
+      
+      .prose blockquote {
+        border-left: 4px solid #d5c4a1;
+        padding-left: 1rem;
+        margin: 1.5rem 0;
+        font-style: italic;
+        color: #665c54;
+      }
+      
+      .dark .prose blockquote {
+        border-left-color: #504945;
+        color: #bdae93;
+      }
+
+     .prose pre {
+        background-color: #3c3836;
+        color: #ebdbb2;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        margin: 1rem 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+      }     
+      
+      .dark .prose pre {
+        background-color: #1d2021;
+      }
+      
+      .prose code {
+        color: rgb(254, 128, 25);
+        font-weight: 600;
+        font-size: 0.875em;
+      }
+      
+      .prose pre code {
+        color: #ebdbb2;
+        font-weight: 400;
+        font-size: 0.875em;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen flex flex-col bg-[#fbf1c7] text-[#3c3836] dark:bg-[#282828] dark:text-[#ebdbb2] font-mono">
+      <header class="p-4 bg-[#ebdbb2] dark:bg-[#3c3836]">
+        <nav class="container mx-auto flex justify-between items-center">
+          <a href="/blog.html">
+            <h1 class="text-2xl font-bold text-[#b57614] dark:text-[#fe8019]">&larr; Blog</h1>
+          </a>
+        </nav>
+      </header>
+
+      <main class="flex-grow container mx-auto px-4 py-8">
+        <article class="prose dark:prose-invert max-w-none">
+          <h1 class="text-4xl font-bold mb-4 text-[#b57614] dark:text-[#fe8019]">Building a Modern Website with Go, HTMX, and Templ</h1>
+          <div class="mb-4">
+            <time class="text-sm text-[#7c6f64] dark:text-[#a89984]">February 6, 2025</time>
+            <div class="text-sm text-[#7c6f64] dark:text-[#a89984]">Tags: web,go,htmx</div>
+          </div>
+          <h2>Building a Modern Website with Go, HTMX, and Templ</h2>
+<p>In this article, we&#39;ll explore how to build a modern, dynamic website using Go, HTMX, and Templ. We will also setup Server-Sent Events(SSE) for real-time data streaming.<br>This stack combines the performance and simplicity of Go with the power of server-side rendering and modern frontend interactivity.</p>
+<p>Following this guide you will end up with a website with this stack that displays real-time data:</p>
+<p><img src="https://gurgen.zip/assets/go-htmx-screenshot-2.gif" alt="Screenshot 2"></p>
+<h2>The Stack</h2>
+<ul>
+<li>Go: For when Python is too slow and Rust is too scary</li>
+<li>HTMX: Because 2025 is the year of hypermedia</li>
+<li>Templ: HTML templates that won&#39;t let you shoot yourself in the foot (much)</li>
+<li>Tailwind CSS: For developers who love typing class names more than writing CSS</li>
+</ul>
+<h2>Project Structure</h2>
+<p>The program follows this structure:</p>
+<pre><code>server/
+├── handlers/
+│   └── usageSSE.go         # SSE event handler
+├── view/
+│   ├── components/
+│   │   └── usages.templ    # System metrics components
+│   ├── layout/
+│   │   └── base.templ      # Base layout template
+│   └── index.templ         # Main page template
+├── static/
+│   └── css/
+│       ├── src.css         # Tailwind source
+│       └── tailwind.css    # Generated styles
+├── main.go                 # Server entry point
+├── package.json            # Node.js dev dependencies
+└── tailwind.config.js      # Tailwind configuration
+</code></pre>
+<h2>Setup</h2>
+<h3>1. Project Initialization</h3>
+<p>First, let&#39;s create the project directory and initialize a Go project:</p>
+<pre><code class="language-bash">mkdir server
+cd server
+go mod init server
+</code></pre>
+<p>Install required Go dependencies:</p>
+<pre><code class="language-bash">go get github.com/a-h/templ@latest
+go install github.com/a-h/templ/cmd/templ@latest
+</code></pre>
+<h3>2. Tailwind CSS Setup</h3>
+<p>Initialize Node.js project and install Tailwind:</p>
+<pre><code class="language-bash">npm init -y
+npm install --save-dev tailwindcss @tailwindcss/cli
+</code></pre>
+<p>Create <code>tailwind.config.js</code>:</p>
+<pre><code class="language-js">// server/tailwind.config.js
+
+export default {
+  content: [&quot;./view/**/*.templ&quot;],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+</code></pre>
+<p>Create <code>static/css/src.css</code>:</p>
+<pre><code class="language-css">// server/static/css/src.css
+
+@import &quot;tailwindcss&quot;
+</code></pre>
+<p>Update <code>package.json</code> to add the build scripts:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;server&quot;,
+  &quot;version&quot;: &quot;0.0.0&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;npx @tailwindcss/cli -i ./static/css/src.css -o ./static/css/tailwind.css&quot;,
+    &quot;watch&quot;: &quot;npx @tailwindcss/cli -i ./static/css/src.css -o ./static/css/tailwind.css --watch&quot;
+  },
+  &quot;keywords&quot;: [],
+  &quot;author&quot;: &quot;&quot;,
+  &quot;license&quot;: &quot;ISC&quot;,
+  &quot;devDependencies&quot;: {
+    &quot;tailwindcss&quot;: &quot;^4.0.3&quot;,
+    &quot;@tailwindcss/cli&quot;: &quot;^4.0.3&quot;
+  }
+}
+</code></pre>
+<h3>3. Basic Server Setup</h3>
+<p>Create <code>view/layout/base.templ</code>:</p>
+<pre><code class="language-templ">// view/layout/base.templ
+package layout
+
+templ Base(children ...templ.Component) {
+    &lt;!DOCTYPE html&gt;
+    &lt;html lang=&quot;en&quot;&gt;
+        &lt;head&gt;
+            &lt;meta charset=&quot;UTF-8&quot;/&gt;
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;/&gt;
+            &lt;title&gt;CEO of HTMX&lt;/title&gt;
+            &lt;link href=&quot;/static/css/tailwind.css&quot; rel=&quot;stylesheet&quot;/&gt;
+        &lt;/head&gt;
+        &lt;body class=&quot;bg-black text-green-400&quot;&gt;
+            for _, child := range children {
+                @child
+            }
+        &lt;/body&gt;
+    &lt;/html&gt;
+}
+</code></pre>
+<p>Create <code>view/index.templ</code></p>
+<pre><code class="language-templ">// view/index.templ
+package view
+
+templ Index() {
+    &lt;div class=&quot;container mx-auto px-4 py-8&quot;&gt;
+        &lt;header class=&quot;mb-8&quot;&gt;
+            &lt;h1 class=&quot;text-4xl font-bold text-center&quot;&gt;System Monitor&lt;/h1&gt;
+        &lt;/header&gt;
+        &lt;main&gt;
+            &lt;div class=&quot;max-w-4xl mx-auto&quot;&gt;
+                Coming Soon
+            &lt;/div&gt;
+        &lt;/main&gt;
+    &lt;/div&gt;
+}
+</code></pre>
+<p>To use these templates, first we need to generate them.<br>In project root, run:</p>
+<pre><code class="language-bash">templ generate
+</code></pre>
+<p>Create <code>main.go</code>:</p>
+<pre><code class="language-go">package main
+
+import (
+    &quot;log&quot;
+    &quot;net/http&quot;
+    &quot;server/view&quot;
+    &quot;server/view/layout&quot;
+    &quot;github.com/a-h/templ&quot;
+)
+
+func main() {
+    // Serve static files
+    fs := http.FileServer(http.Dir(&quot;./static&quot;))
+    http.Handle(&quot;/static/&quot;, http.StripPrefix(&quot;/static/&quot;, fs))
+
+    // Serve main page with a templ component
+    http.Handle(&quot;/&quot;, templ.Handler(layout.Base(view.Index())))
+
+    log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))
+}
+</code></pre>
+<p>Now we have a Go server that uses Templ to generate HTML server-side and uses tailwind for styles.</p>
+<p>To run the server, let&#39;s generate tailwind classes and start the server;</p>
+<pre><code class="language-bash">npm run build &amp;&amp; go run main.go
+</code></pre>
+<p>If you navigate to <code>localhost:8080</code> you will see this page.</p>
+<p><img src="https://gurgen.zip/assets/go-htmx-screenshot-1.png" alt="Screenshot 1"></p>
+<h2>HTMX and Real-Time Updates</h2>
+<p>Now let&#39;s add HTMX and SSE to the mix.</p>
+<h3>1. Adding HTMX Scripts</h3>
+<p>Update <code>view/layout/base.templ</code> to include HTMX and its SSE extension:</p>
+<pre><code class="language-html">// view/layout/base.templ
+package layout
+
+templ Base(children ...templ.Component) {
+    &lt;!DOCTYPE html&gt;
+    &lt;html lang=&quot;en&quot;&gt;
+        &lt;head&gt;
+            &lt;meta charset=&quot;UTF-8&quot;/&gt;
+            &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;/&gt;
+            &lt;title&gt;CEO of HTMX&lt;/title&gt;
+            &lt;link href=&quot;/static/css/tailwind.css&quot; rel=&quot;stylesheet&quot;/&gt;
+
+            &lt;!-- ADD THESE --&gt;
+            &lt;script src=&quot;https://unpkg.com/htmx.org@1.9.10&quot;&gt;&lt;/script&gt;
+            &lt;script src=&quot;https://unpkg.com/htmx.org@1.9.12/dist/ext/sse.js&quot;&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body class=&quot;bg-black text-green-400&quot;&gt;
+            for _, child := range children {
+                @child
+            }
+        &lt;/body&gt;
+    &lt;/html&gt;
+}
+</code></pre>
+<h3>2. Creating Real-Time Components</h3>
+<p>Create <code>view/components/usages.templ</code></p>
+<pre><code class="language-go">// view/components/usages.templ
+package components
+
+templ Usages() {
+	&lt;div
+		hx-ext=&quot;sse&quot;
+		sse-connect=&quot;/usage&quot;
+		class=&quot;grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6&quot;
+	&gt;
+		&lt;div class=&quot;bg-gray-900 p-4 border-2 border-green-400&quot;&gt;
+			&lt;h3 class=&quot;text-2xl mb-2&quot;&gt;CPU Usage: &lt;span sse-swap=&quot;cpu&quot;&gt;&lt;/span&gt;&lt;/h3&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;bg-gray-900 p-4 border-2 border-green-400&quot;&gt;
+			&lt;h3 class=&quot;text-2xl mb-2&quot;&gt;Memory Usage: &lt;span sse-swap=&quot;ram&quot;&gt;&lt;/span&gt;&lt;/h3&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;bg-gray-900 p-4 border-2 border-green-400&quot;&gt;
+			&lt;h3 class=&quot;text-2xl mb-2&quot;&gt;Disk Usage: &lt;span sse-swap=&quot;disk&quot;&gt;&lt;/span&gt;&lt;/h3&gt;
+		&lt;/div&gt;
+	&lt;/div&gt;
+}
+</code></pre>
+<p>Update <code>view/index.templ</code> to include the new <code>Usages</code> component:</p>
+<pre><code class="language-go">// view/index.templ
+package view
+
+import &quot;server/view/components&quot;
+
+templ Index() {
+	&lt;div class=&quot;container mx-auto px-4 py-8&quot;&gt;
+		&lt;header class=&quot;mb-8&quot;&gt;
+			&lt;h1 class=&quot;text-4xl font-bold text-center&quot;&gt;System Monitor&lt;/h1&gt;
+		&lt;/header&gt;
+		&lt;main&gt;
+			&lt;div class=&quot;max-w-4xl mx-auto&quot;&gt;
+                &lt;!-- Replace &quot;Coming Soon&quot; with this --&gt;
+				@components.Usages()
+			&lt;/div&gt;
+		&lt;/main&gt;
+	&lt;/div&gt;
+}
+</code></pre>
+<h3>3. Server-Sent Events Setup</h3>
+<p>Create <code>handlers/usageSSE.go</code>:</p>
+<pre><code class="language-go">// handlers/usageSSE.go
+package handlers
+
+import (
+    &quot;fmt&quot;
+    &quot;net/http&quot;
+    &quot;time&quot;
+    &quot;math/rand&quot; // For demo purposes
+)
+
+func UsageSSE(w http.ResponseWriter, r *http.Request) {
+    // Set SSE headers
+    w.Header().Set(&quot;Content-Type&quot;, &quot;text/event-stream&quot;)
+    w.Header().Set(&quot;Cache-Control&quot;, &quot;no-cache&quot;)
+    w.Header().Set(&quot;Connection&quot;, &quot;keep-alive&quot;)
+    w.Header().Set(&quot;Access-Control-Allow-Origin&quot;, &quot;*&quot;)
+
+    for {
+        select {
+        case &lt;-r.Context().Done():
+            return
+        default:
+            // Simulated metrics (replace with real metrics)
+            cpu := rand.Intn(100)
+            ram := rand.Intn(100)
+            disk := rand.Intn(100)
+
+            // Send events for each metric
+            fmt.Fprintf(w, &quot;event: cpu\ndata: %d%%\n\n&quot;, cpu)
+            fmt.Fprintf(w, &quot;event: ram\ndata: %d%%\n\n&quot;, ram)
+            fmt.Fprintf(w, &quot;event: disk\ndata: %d%%\n\n&quot;, disk)
+
+            w.(http.Flusher).Flush()
+            time.Sleep(1 * time.Second)
+        }
+    }
+}
+</code></pre>
+<h3>4. Adding SSE Route</h3>
+<p>Update <code>main.go</code> to include the SSE endpoint:</p>
+<pre><code class="language-go">// main.go
+package main
+
+import (
+    &quot;log&quot;
+    &quot;net/http&quot;
+    &quot;server/view&quot;
+	&quot;server/handlers&quot;
+    &quot;server/view/layout&quot;
+    &quot;github.com/a-h/templ&quot;
+)
+
+func main() {
+    fs := http.FileServer(http.Dir(&quot;./static&quot;))
+    http.Handle(&quot;/static/&quot;, http.StripPrefix(&quot;/static/&quot;, fs))
+
+    // Add SSE endpoint
+    http.HandleFunc(&quot;/usage&quot;, handlers.UsageSSE)
+    http.Handle(&quot;/&quot;, templ.Handler(layout.Base(view.Index())))
+
+    log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))
+}
+</code></pre>
+<p>Now, when you run the server and visit the page, you&#39;ll see real-time updates of system metrics without any page refreshes<br>or complex JavaScript. HTMX handles the SSE connection and DOM updates automatically, while Go efficiently streams the data.</p>
+<pre><code class="language-bash">templ generate &amp;&amp; npm run build &amp;&amp; go run main.go
+</code></pre>
+<p><img src="https://gurgen.zip/assets/go-htmx-screenshot-2.gif" alt="Screenshot 2"></p>
+<h2>Extras</h2>
+<p>Now, this is all cool and stuff, but in my current workflow I use some additions for this setup.</p>
+<h3>1. <code>air</code> Live Reload Server</h3>
+<p>Running <code>templ generate &amp;&amp; npm run build &amp;&amp; go run main.go</code> is tiring and not something you should do after every single change.</p>
+<p>To fix that let&#39;s install and configure <a href="https://github.com/air-verse/air">air</a> to handle that for us:</p>
+<pre><code class="language-bash">go install github.com/air-verse/air@latest
+</code></pre>
+<p>Create an <code>.air.toml</code> file with this config:</p>
+<pre><code># file: server/.air.toml
+
+root = &quot;.&quot;
+tmp_dir = &quot;bin&quot;
+
+[build]
+  bin = &quot;./bin/main&quot;
+  cmd = &quot;templ generate &amp;&amp; npm run build &amp;&amp; go build main.go -o ./bin/main .&quot;
+  delay = 500
+  exclude_dir = [&quot;static&quot;, &quot;node_modules&quot;]
+  exclude_regex = [&quot;.*_templ.go&quot;]
+  exclude_unchanged = false
+  follow_symlink = false
+  include_ext = [&quot;go&quot;, &quot;tpl&quot;, &quot;tmpl&quot;, &quot;templ&quot;, &quot;html&quot;]
+  kill_delay = &quot;0s&quot;
+  log = &quot;build-errors.log&quot;
+  send_interrupt = false
+  stop_on_error = true
+
+[color]
+  build = &quot;yellow&quot;
+  main = &quot;magenta&quot;
+  runner = &quot;green&quot;
+  watcher = &quot;cyan&quot;
+
+[log]
+  time = false
+
+[misc]
+  clean_on_exit = true
+
+[screen]
+  clear_on_rebuild = true
+  keep_scroll = true
+
+# Enable live-reloading on the browser.
+[proxy]
+  enabled = true
+  app_port = 8080
+  proxy_port = 8090
+</code></pre>
+<p>Now in the server directory you can run <code>air</code> and it will setup a live-reload server alongside with a proxy listening on <code>localhost:8090</code><br>that will automatically detect changes in your server and run the build commands and reload the proxied server.</p>
+<h3>2. Sending Partial HTMLs</h3>
+<p>When using HTMX we need to be able send some parts as html.</p>
+<h4>2.1 <code>templ.Handler</code></h4>
+<p>We have already seen the <code>templ.Handler()</code> function from the <code>a-h/templ</code> library.<br>It receives a <code>templ.Component</code> and returns an <code>http.Handler</code> interface so you can use it to handle various requests:</p>
+<p>Let&#39;s say we have an html element that uses <code>hx-get</code> to swap itself with the server response:</p>
+<pre><code class="language-html">&lt;button hx-get=&quot;/foo&quot; hx-swap=&quot;outerHTML&quot; class=&quot;btn bg-teal-200 p-4 rounded-lg cursor-pointer&quot;&gt;
+    Foo
+&lt;/button&gt;
+</code></pre>
+<p>We can define a <code>templ</code> component <code>Bar</code>:</p>
+<pre><code class="language-go">package partials
+
+templ Bar() {
+    &lt;div&gt;
+        You Clicked on Foo
+    &lt;/div&gt;
+}
+</code></pre>
+<p>And then handle this interaction in our router:</p>
+<pre><code class="language-go">http.Handle(&quot;/foo&quot;, templ.Handler(partials.Bar()))
+</code></pre>
+<h4>2.2 Rendering Comonents to strings</h4>
+<p>We sometimes may need to use just the string content of the final <code>templ</code> component.<br>For example you want to send a new partial html as a part of your Server-Sent Event</p>
+<p>The SSE has the following structure:</p>
+<pre><code>event: event-name
+data: any-data
+</code></pre>
+<p>Now, to replace the <code>data</code> in the msg with a partial component, we need to turn it into a string and interpolate it.<br><code>templ.Component</code> has a <code>Render(ctx context.Context, w io.Writer)</code> Method, so we can just:</p>
+<pre><code class="language-go">var buf strings.Builder
+_ = partials.Bar().Render(context.Background(), &amp;buf)
+
+sseMsg := fmt.Sprintf(&quot;event: %s\ndata: %s\n\n&quot;, &quot;event-name&quot;, buf.String())
+</code></pre>
+<p>the <code>sseMsg</code> now has the partial component embedded in its <code>data</code> field.</p>
+<h2>References</h2>
+<p>Check out <a href="https://github.com/rasjonell/hybr">hybr</a>. Where I use this stack to build a self-hosted service management platform.</p>
+<ul>
+<li><a href="https://htmx.org/">htmx</a></li>
+<li><a href="https://v1.htmx.org/extensions/server-sent-events/">htmx-sse</a></li>
+<li><a href="https://github.com/a-h/templ">templ</a></li>
+<li><a href="https://github.com/air-verse/air">air</a></li>
+</ul>
+
+        </article>
+      </main>
+
+      <footer class="bg-[#ebdbb2] dark:bg-[#3c3836] p-4 text-center">made with ❤️</footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Using AWK To Process Huge CSV Files - Gurgen.zip</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="description" content="AWK is a tool, which, when told so, works as a lightweight CSV processor." />
+    <meta name="keywords" content="awk,unix,data-processing" />
+    <meta name="author" content="Gurgen Hayrapetyan" />
+    <link href="/styles.css" rel="stylesheet" />
+    <style>
+      pre[class*="language-"] {
+        background: #3c3836;
+        padding: 1em;
+        margin: .5em 0;
+        overflow: auto;
+        border-radius: 0.3em;
+      }
+      
+      code[class*="language-"] {
+        font-family: "Fira Code", monospace;
+        white-space: pre;
+        tab-size: 4;
+      }
+      
+      .dark pre[class*="language-"] {
+        background: #1d2021;
+      }
+
+      .prose {
+        color: inherit;
+      }
+      
+      .prose h1 {
+        font-size: 2.25rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: #b57614;
+        line-height: 1.2;
+      }
+      
+      .dark .prose h1 {
+        color: #fe8019;
+      }
+      
+      .prose h2 {
+        font-size: 1.875rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 700;
+        color: #b57614;
+        line-height: 1.3;
+      }
+      
+      .dark .prose h2 {
+        color: #fe8019;
+      }
+      
+      .prose h3 {
+        font-size: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: #b57614;
+        line-height: 1.4;
+      }
+      
+      .dark .prose h3 {
+        color: #fe8019;
+      }
+      
+      .prose h4 {
+        font-size: 1.25rem;
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-weight: 600;
+        color: #b57614;
+        line-height: 1.4;
+      }
+      
+      .dark .prose h4 {
+        color: #fe8019;
+      }
+      
+      .prose p {
+        margin-top: 1.25em;
+        margin-bottom: 1.25em;
+        line-height: 1.6;
+      }
+      
+      .prose ul {
+        margin-top: 1.25em;
+        margin-bottom: 1.25em;
+        padding-left: 1.625em;
+        list-style-type: disc;
+      }
+      
+      .prose ol {
+        margin-top: 1.25em;
+        margin-bottom: 1.25em;
+        padding-left: 1.625em;
+        list-style-type: decimal;
+      }
+      
+      .prose li {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+      }
+      
+      .prose a {
+        color: #d65d0e;
+        text-decoration: underline;
+      }
+      
+      .dark .prose a {
+        color: #fe8019;
+      }
+      
+      .prose blockquote {
+        border-left: 4px solid #d5c4a1;
+        padding-left: 1rem;
+        margin: 1.5rem 0;
+        font-style: italic;
+        color: #665c54;
+      }
+      
+      .dark .prose blockquote {
+        border-left-color: #504945;
+        color: #bdae93;
+      }
+
+     .prose pre {
+        background-color: #3c3836;
+        color: #ebdbb2;
+        padding: 1rem;
+        border-radius: 0.375rem;
+        margin: 1rem 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+      }     
+      
+      .dark .prose pre {
+        background-color: #1d2021;
+      }
+      
+      .prose code {
+        color: rgb(254, 128, 25);
+        font-weight: 600;
+        font-size: 0.875em;
+      }
+      
+      .prose pre code {
+        color: #ebdbb2;
+        font-weight: 400;
+        font-size: 0.875em;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: anywhere;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="min-h-screen flex flex-col bg-[#fbf1c7] text-[#3c3836] dark:bg-[#282828] dark:text-[#ebdbb2] font-mono">
+      <header class="p-4 bg-[#ebdbb2] dark:bg-[#3c3836]">
+        <nav class="container mx-auto flex justify-between items-center">
+          <a href="/blog.html">
+            <h1 class="text-2xl font-bold text-[#b57614] dark:text-[#fe8019]">&larr; Blog</h1>
+          </a>
+        </nav>
+      </header>
+
+      <main class="flex-grow container mx-auto px-4 py-8">
+        <article class="prose dark:prose-invert max-w-none">
+          <h1 class="text-4xl font-bold mb-4 text-[#b57614] dark:text-[#fe8019]">Using AWK To Process Huge CSV Files</h1>
+          <div class="mb-4">
+            <time class="text-sm text-[#7c6f64] dark:text-[#a89984]">March 26, 2020</time>
+            <div class="text-sm text-[#7c6f64] dark:text-[#a89984]">Tags: awk,unix,data-processing</div>
+          </div>
+          <h2>Problem</h2>
+<p>I had 38 separate <code>.csv</code> files each consisted of at least 40K lines of data. Overall there were ≥ 2.6 million rows of information. The problem was that the data was not in the ideal form.</p>
+<p>Each file had 5 columns. One of the columns was called <em>birthday</em>. It had a conventional(at least for the most of the world) format: <code>DD/MM/YYYY</code>. However I was going to put this data in a DB(more on that later!) and I needed to have 3 separate properties(i.e. <code>{ day: DD, month: MM, year: YYYY }</code>). Also there were some columns that were not useful so I had to get rid of them. In addition, I also wanted to reduce the number of files to one.</p>
+<h2>Approach</h2>
+<p>I know some python and from a couple of data science courses I was introduced to <a href="https://pandas.pydata.org/">Pandas</a>, a well-known tool for data analysis built on top of python. It had a straightforward way of reading, manipulating, and writing csv files. I was going to use that, but didn&#39;t really want to download this tool to use only one of the features and never use it again. So I choose something that comes with nearly all modern unix-like systems. <a href="https://en.wikipedia.org/wiki/AWK">AWK</a> is <em>designed</em> for text processing and much like other programs in the unix-like world it does one thing well and produces fascinating results in regards to simplicity and performance when composed with other unix tools.</p>
+<h2>Solution</h2>
+<p>Now we need to make AWK process <code>.csv</code> files.<br>AWK uses <em>field separators</em> to split an input into fields. It may either be a character or a RegExp.<br>So all we need to do to make AWK become a <code>.csv</code> processor is to set FS(field separator) to be <code>&quot;,&quot;</code>.</p>
+<p>We can achieve this using AWK&#39;s <a href="https://www.gnu.org/software/gawk/manual/html_node/Using-BEGIN_002fEND.html#Using-BEGIN_002fEND">Startup and Cleanup Actions</a>.</p>
+<pre><code class="language-awk"># clean_csv.awk
+
+BEGIN {
+  FS = &quot;,&quot;
+}
+{
+  print $1
+}
+END {
+}
+</code></pre>
+<p>Then if we pass an input such as <code>one, two, three</code> to the script, it will print <code>one</code>:</p>
+<pre><code class="language-sh">$ echo &quot;one, two, three&quot; | awk -f csv.awk
+
+one
+</code></pre>
+<p>Now that we have this, we can finally solve our problems: splitting <code>DD/MM/YYYY</code> column into three separate columns and removing the useless column.<br>AWK has a <code>split</code> function that takes a field, a new variable, and a separator and puts the separated values into the new variable.</p>
+<p>The birthday column was #3 so to create the separate fields we need to make the following modifications:</p>
+<pre><code class="language-awk"># clean_csv.awk
+
+
+BEGIN {
+  FS = &quot;,&quot;
+}
+{
+  # split DD/MM/YYY into an array of values
+  split($4, dob, &quot;/&quot;)
+
+  # turn these values into separate columns
+  total = dob[1] &quot;,&quot; dob[2] &quot;,&quot; dob[3]
+
+  # finalize the row, omitting the useless #4 column.
+  row = $1 &quot;,&quot; $2 &quot;,&quot; total &quot;,&quot; $5
+
+  print row
+}
+END {
+}
+</code></pre>
+<p>This mainly solves most of our problems, except for the first row of the input. <code>.csv</code> files have headers as a set of labels on the first row, thus we need to skip every first line of every <code>.csv</code> file.</p>
+<p>In AWK <code>NR</code> and <code>FNR</code> represent the record number. The latter shows the record number of the current file, while the first holds the total count. Since we are going to use this script on more then one file, we&#39;ll stick with <code>FNR</code>.</p>
+<p>So the final script looks like so:</p>
+<pre><code class="language-awk"># clean_csv.awk
+
+BEGIN {
+  FS = &quot;,&quot;
+
+  # create a new header with correct labels
+  print &quot;last_name,first_name,birth_day,birth_month,birth_year,country&quot;
+}
+{
+  if (FNR &gt; 1) { # omit every first line
+    # split DD/MM/YYY into an array of values
+    split($4, dob, &quot;/&quot;)
+
+    # turn these values into separate columns
+    total = dob[1] &quot;,&quot; dob[2] &quot;,&quot; dob[3]
+
+    # finalize the row, omitting the useless #4 column.
+    row = $1 &quot;,&quot; $2 &quot;,&quot; total &quot;,&quot; $5
+
+    print row
+  }
+}
+END {
+}
+</code></pre>
+<p>At last, to execute this on our 38 <code>.csv</code> files we need to run this command:</p>
+<pre><code class="language-sh">awk -f clean_csv *.csv &gt; clean.csv
+</code></pre>
+<h2>Conclusion</h2>
+<p>We read and manipulated over 30 <code>.csv</code> files with more than 2.6 million rows of data combined and reduced them into a single clean file without installing any software. So if you&#39;re faced with a problem, you may not need to install a bloated software to solve it when the solution comes pre-installed with your system.</p>
+
+        </article>
+      </main>
+
+      <footer class="bg-[#ebdbb2] dark:bg-[#3c3836] p-4 text-center">made with ❤️</footer>
+    </div>
+  </body>
+</html>
